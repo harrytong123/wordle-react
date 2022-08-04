@@ -137,3 +137,13 @@ nav h1 {
 #disabled {
   background-color: #3a393c;
 }
+
+.end{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: larger;
+}
+
