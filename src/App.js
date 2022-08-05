@@ -153,10 +153,12 @@ function App() {
     }
   }
 
+  console.log(correctWord.join(""))
+
   return (
     <div className="App" tabIndex="0">
-      {lose && <Lose height={innerHeight} width={innerWidth} />}
-      {win && <Win height={innerHeight} width={innerWidth} correctWord={correctWord} />}
+      {lose && <Lose height={innerHeight} width={innerWidth} correctWord={correctWord.join("")}/>}
+      {win && <Win height={innerHeight} width={innerWidth}/>}
       <nav>
         <h1 className="noSelect">Harry's Wordle</h1>
       </nav>
