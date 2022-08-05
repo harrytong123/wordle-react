@@ -74,7 +74,9 @@ function App() {
     for (let i = 0; i < 5; i++) {
       if (almost[i] && !correct[i]) {
         newBoard[checkRow][i]['state'] = "almost"
-        keyMap.set(newBoard[checkRow][i]['char'], "almost")
+        if (keyMap.get(newBoard[checkRow][i]['char']) != "correct"){
+          keyMap.set(newBoard[checkRow][i]['char'], "almost")
+        }
       }
       if (correct[i]) {
         newBoard[checkRow][i]['state'] = "correct"
