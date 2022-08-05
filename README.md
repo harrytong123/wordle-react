@@ -8,4 +8,4 @@ To Download and edit code, download Node.JS and run 'npm start' in the directory
 
 ### `Online Use`
 
-To access the website online, please visit https://harry-wordle.com. This react.js app was deployed using AWS Amplify
+To access the website online, please visit https://www.harry-wordle.com. This react.js app was deployed using AWS Amplify
