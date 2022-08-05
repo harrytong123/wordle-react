@@ -1,9 +1,11 @@
 import React from 'react'
 
-const Key = ({ val , onClickKey}) => {
+const Key = ({ val, onClickKey, keyMap }) => {
+
+  const state = keyMap.get(val)
 
   return (
-    <div className='key noSelect' onClick={() => onClickKey(val)}>{val}</div>
+    <div className = {`key noSelect`} id = {state} onClick={() => onClickKey(val)}>{val}</div>
   )
 }
 

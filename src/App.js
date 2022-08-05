@@ -7,6 +7,7 @@ import Keyboard from './Components/Keyboard';
 import { createContext } from 'react'
 import Win from './Components/Win';
 import Lose from './Components/Lose';
+import useEventListener from '@use-it/event-listener';
 
 export const AppContext = createContext()
 
@@ -16,6 +17,35 @@ const random_word = (possibleWordList[random_index].toUpperCase()).split("")
 
 function App() {
 
+  const dict = new Map([
+    ["Q", ""],
+    ["W", ""],
+    ["E", ""],
+    ["R", ""],
+    ["T", ""],
+    ["Y", ""],
+    ["U", ""],
+    ["I", ""],
+    ["O", ""],
+    ["P", ""],
+    ["A", ""],
+    ["S", ""],
+    ["D", ""],
+    ["F", ""],
+    ["G", ""],
+    ["H", ""],
+    ["J", ""],
+    ["K", ""],
+    ["L", ""],
+    ["Z", ""],
+    ["X", ""],
+    ["C", ""],
+    ["V", ""],
+    ["B", ""],
+    ["N", ""],
+    ["M", ""],
+  ])
+
   const [board, setBoard] = useState(startingBoard)
   const { innerWidth, innerHeight } = window;
   const [currentRow, setCurrentRow] = useState(0)
@@ -23,8 +53,7 @@ function App() {
   const [correctWord, setCorrectWord] = useState(random_word)
   const [win, setWin] = useState(false)
   const [lose, setLose] = useState(false)
-
-  console.log(correctWord)
+  const [keyMap, setKeyMap] = useState(dict)
 
   const checkBoard = (checkRow) => {
 
@@ -43,20 +72,22 @@ function App() {
     }
 
     for (let i = 0; i < 5; i++) {
-      if (almost[i]) {
+      if (almost[i] && !correct[i]) {
         newBoard[checkRow][i]['state'] = "almost"
+        keyMap.set(newBoard[checkRow][i]['char'], "almost")
       }
       if (correct[i]) {
         newBoard[checkRow][i]['state'] = "correct"
+        keyMap.set(newBoard[checkRow][i]['char'], "correct")
       }
       if (!almost[i] && !correct[i]) {
         newBoard[checkRow][i]['state'] = "error"
+        keyMap.set(newBoard[checkRow][i]['char'], "error")
       }
     }
 
 
     setBoard(newBoard)
-    console.log(checkRow)
     checkGame(checkRow)
   }
 
@@ -73,13 +104,11 @@ function App() {
   }
 
   const checkGame = (rowtocheck) => {
-    console.log(rowtocheck)
     const row = board[rowtocheck]
     let check = true
 
     for (let i = 0; i < 5; i++) {
       if (row[i]['char'] != correctWord[i]) {
-        console.log(row[i]['char'])
         check = false
       }
     }
@@ -125,9 +154,9 @@ function App() {
   }
 
   return (
-    <div className="App">
+    <div className="App" tabIndex="0">
       {lose && <Lose height={innerHeight} width={innerWidth} />}
-      {win && <Win height={innerHeight} width={innerWidth} correctWord = {correctWord}/>}
+      {win && <Win height={innerHeight} width={innerWidth} correctWord={correctWord} />}
       <nav>
         <h1 className="noSelect">Harry's Wordle</h1>
       </nav>
@@ -136,7 +165,7 @@ function App() {
           <div style={{ display: 'flex', justifyContent: 'center' }}>
             <Board />
           </div>
-          <Keyboard onClickKey={clickKey} onEnter={enterKey} />
+          <Keyboard onClickKey={clickKey} onEnter={enterKey} keyMap={keyMap} />
         </div>
       </AppContext.Provider>
     </div>
