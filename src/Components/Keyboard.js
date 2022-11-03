@@ -3,7 +3,7 @@ import Key from './Key'
 import Enter from './Enter'
 import Delete from './Delete'
 
-const Keyboard = ({onClickKey, onEnter, keyMap}) => {
+const Keyboard = ({onClickKey, onEnter, onDelete, keyMap}) => {
 
   const keys1 = ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P']
   const keys2 = ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L']
@@ -20,7 +20,7 @@ const Keyboard = ({onClickKey, onEnter, keyMap}) => {
       <div className="line3">
         <Enter onEnter = {onEnter}/>
         {keys3.map((key, index) => <Key key = {index + 200} val = {key} onClickKey = {onClickKey} keyMap = {keyMap}/>)}
-        <Delete/>
+        <Delete onDelete = {onDelete}/>
       </div>
     </div>
   )

@@ -1,13 +1,11 @@
 import './App.css';
-import { useState } from 'react';
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { startingBoard, validWordList, possibleWordList } from './Words'
 import Board from './Components/Board';
 import Keyboard from './Components/Keyboard';
 import { createContext } from 'react'
 import Win from './Components/Win';
 import Lose from './Components/Lose';
-import useEventListener from '@use-it/event-listener';
 
 export const AppContext = createContext()
 
@@ -55,6 +53,39 @@ function App() {
   const [lose, setLose] = useState(false)
   const [keyMap, setKeyMap] = useState(dict)
 
+  useEffect(() => {
+    let flag = true;
+
+    const pressKey = (e) => {
+      if (flag) {
+        if (e.keyCode <= 90 && e.keyCode >= 65) {
+          const val = String.fromCharCode(e.keyCode);
+          flag = false;
+          clickKey(val);
+        }
+        if (e.keyCode === 8) {
+          deleteKey();
+        }
+        if (e.keyCode === 13){
+          enterKey();
+        }
+      }
+    }
+
+    const liftKey = () => {
+      flag = true;
+    }
+
+    document.addEventListener("keydown", pressKey);
+    document.addEventListener("keyup", liftKey);
+
+    return (() => {
+      document.removeEventListener("keydown", pressKey);
+      document.removeEventListener("keyup", liftKey);
+    });
+  }, [currentTile]);
+
+
   const checkBoard = (checkRow) => {
 
     let newBoard = [...board]
@@ -74,7 +105,7 @@ function App() {
     for (let i = 0; i < 5; i++) {
       if (almost[i] && !correct[i]) {
         newBoard[checkRow][i]['state'] = "almost"
-        if (keyMap.get(newBoard[checkRow][i]['char']) != "correct"){
+        if (keyMap.get(newBoard[checkRow][i]['char']) != "correct") {
           keyMap.set(newBoard[checkRow][i]['char'], "almost")
         }
       }
@@ -99,7 +130,7 @@ function App() {
 
       newBoard[currentRow][currentTile]['char'] = val
 
-      setCurrentTile(currentTile + 1)
+      setCurrentTile(currentTile + 1);
 
       setBoard(newBoard)
     }
@@ -137,8 +168,6 @@ function App() {
       })
       const rowstring = rowarray.join("").toLowerCase()
 
-      console.log(rowstring)
-
       if (!validWordList.includes(rowstring)) {
         alert('Invalid Word')
       }
@@ -155,12 +184,18 @@ function App() {
     }
   }
 
-  console.log(correctWord.join(""))
+  const deleteKey = () => {
+    if (currentTile != 0) {
+      const newBoard = [...board, board[currentRow][currentTile - 1]['char'] = ""]
+      setBoard(newBoard)
+      setCurrentTile(currentTile - 1)
+    }
+  }
 
   return (
     <div className="App" tabIndex="0">
-      {lose && <Lose height={innerHeight} width={innerWidth} correctWord={correctWord.join("")}/>}
-      {win && <Win height={innerHeight} width={innerWidth}/>}
+      {lose && <Lose height={innerHeight} width={innerWidth} correctWord={correctWord.join("")} />}
+      {win && <Win height={innerHeight} width={innerWidth} />}
       <nav>
         <h1 className="noSelect">Harry's Wordle</h1>
       </nav>
@@ -169,7 +204,7 @@ function App() {
           <div style={{ display: 'flex', justifyContent: 'center' }}>
             <Board />
           </div>
-          <Keyboard onClickKey={clickKey} onEnter={enterKey} keyMap={keyMap} />
+          <Keyboard onClickKey={clickKey} onEnter={enterKey} onDelete = {deleteKey} keyMap={keyMap} />
         </div>
       </AppContext.Provider>
     </div>
